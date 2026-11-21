@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROJECT SHERLOCK: THE MISSING DIAMOND</title>
+  <style>
+    :root {
+      --bg: #111a24;
+      --panel: #1a2632;
+      --line: #334554;
+      --text: #ecf0e8;
+      --muted: #9cacb3;
+      --gold: #e3bd70;
+      --blue: #79c4e8;
+      --green: #8dc8a4;
+      --red: #ef8b77;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 24px;
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      background: radial-gradient(ellipse at top, #263747, var(--bg) 60%);
+    }
+
+    button, select { font: inherit; }
+
+    button {
+      padding: 11px 14px;
+      color: var(--text);
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    button:hover {
+      border-color: var(--gold);
+      transform: translateY(-1px);
+    }
+
+    .app { max-width: 1100px; margin: auto; }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand { color: var(--gold); letter-spacing: 3px; font-size: 13px; }
+    .case-tag { color: var(--muted); font-size: 11px; }
+
+    .intro { padding: 32px 0 23px; }
+    .eyebrow { color: var(--gold); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+    h1 { margin: 8px 0; font-family: Georgia, serif; font-size: clamp(32px, 5vw, 50px); }
+    .intro p, .subtitle { color: var(--muted); }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 18px;
+    }
+
+    aside, main {
+      background: linear-gradient(145deg, #1d2a36, var(--panel));
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    aside { padding: 15px; }
+    .menu-label { padding: 5px 8px 12px; color: var(--muted); font-size: 10px; letter-spacing: 2px; }
+
+    nav { display: grid; gap: 6px; }
+
+    nav button {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      text-align: left;
+      border-color: transparent;
+      color: #c6d0d1;
+    }
+
+    nav button.active {
+      color: var(--gold);
+      background: #e3bd7015;
+      border-color: #e3bd7045;
+    }
+
+    .number { color: var(--gold); font-family: monospace; }
+
+    .briefing {
+      margin: 20px 5px 5px;
+      padding-top: 15px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    main {
+      min-height: 450px;
+      padding: 25px;
+      animation: fadeIn .3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(7px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 { margin-top: 0; font-family: Georgia, serif; }
+    .subtitle { font-size: 13px; line-height: 1.6; }
+
+    .welcome {
+      max-width: 650px;
+      padding: 18px 4px;
+    }
+
+    .welcome h2 { font-size: clamp(27px, 4vw, 40px); line-height: 1.2; }
+    .welcome p { color: var(--muted); line-height: 1.7; }
+
+    .primary {
+      margin: 12px 8px 0 0;
+      color: #18212a;
+      background: var(--gold);
+      border-color: var(--gold);
+      font-weight: bold;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 11px;
+    }
+
+    .card, .clue, .report-item {
+      padding: 15px;
+      background: #ffffff06;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+    }
+
+    .card h3 { margin: 7px 0; font-family: Georgia, serif; }
+    .card p { color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .role { color: var(--gold); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+    .clue {
+      display: flex;
+      gap: 13px;
+      margin: 10px 0;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    .clue-number {
+      flex: 0 0 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      border: 1px solid var(--blue);
+      border-radius: 50%;
+      font-family: monospace;
+    }
+
+    .progress {
+      height: 5px;
+      margin: 12px 0 20px;
+      background: #ffffff15;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--blue);
+      transition: width .3s;
+    }
+
+    .alibi {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 5px 12px;
+      margin: 9px 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .alibi p { grid-column: 1; margin: 0; color: var(--muted); font-size: 12px; }
+    .status { align-self: center; color: var(--gold); font-size: 10px; text-transform: uppercase; }
+    .status.bad { color: var(--red); }
+
+    .notice {
+      margin-top: 14px;
+      padding: 12px;
+      color: var(--muted);
+      background: #ffffff08;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      font-size: 13px;
+    }
+
+    select {
+      padding: 11px;
+      color: var(--text);
+      background: #17232d;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+    }
+
+    .report {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .story-image {
+      display: block;
+      width: 100%;
+      max-height: 330px;
+      object-fit: cover;
+      margin: 12px 0 18px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+    }
+
+    .story-text { max-width: 760px; line-height: 1.75; }
+    .story-text h3 { margin: 24px 0 8px; color: var(--gold); font-family: Georgia, serif; }
+    .story-text p { color: #d2dcdb; }
+
+    .report-item span { color: var(--muted); font-size: 10px; text-transform: uppercase; }
+    .report-item strong { display: block; margin-top: 8px; font: 21px Georgia, serif; }
+    .rank { color: var(--gold); }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 15px 3px;
+      color: #74858e;
+      font: 10px monospace;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 700px) {
+      body { padding: 14px; }
+      .layout { grid-template-columns: 1fr; }
+      nav { grid-template-columns: repeat(2, 1fr); }
+      .briefing { display: none; }
+      main { padding: 18px; }
+      .cards { grid-template-columns: 1fr; }
+      footer { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">✦ &nbsp; BLACKWOOD DETECTIVE BUREAU</div>
+      <div class="case-tag">CASE FILE 04-B · OPEN</div>
+    </header>
+
+    <section class="intro">
+      <div class="eyebrow">An interactive mystery</div>
+      <h1>The Missing Diamond</h1>
+      <p>Blackwood Mansion · Saturday, 8:30 PM</p>
+    </section>
+
+    <div class="layout">
+      <aside>
+        <div class="menu-label">CASE MENU</div>
+        <nav id="menu"></nav>
+        <div class="briefing">
+          <strong>Case briefing</strong><br>
+          The Blue Diamond vanished during a brief security outage. Gather evidence, test the alibis, then make your accusation.
+        </div>
+      </aside>
+
+      <main id="screen"></main>
+    </div>
+
+    <footer>
+      <span>BLACKWOOD MANSION · EVIDENCE LOG</span>
+      <span>CLUES ARE REVEALED ONE AT A TIME</span>
+    </footer>
+  </div>
+
+  <script>
+    const suspects = [
+      { name: "Adrian", role: "The Butler", alibi: "serving coffee in the kitchen" },
+      { name: "Clara", role: "The Artist", alibi: "painting in the east wing" },
+      { name: "Victor", role: "The Businessman", alibi: "making a phone call in the garden" },
+      { name: "Elena", role: "The Scientist", alibi: "working in the laboratory" }
+    ];
+
+    const clues = [
+      "The security system was disabled between 8:20 PM and 8:35 PM.",
+      "A muddy footprint was found near the exhibition room. Its pattern matches a shoe found in the garden.",
+      "A witness saw someone leaving the exhibition room at 8:27 PM wearing a silver watch.",
+      "Victor's phone records show no outgoing call at 8:30 PM.",
+      "A witness saw Victor near the exhibition room during the theft."
+    ];
+
+    const options = [
+      ["suspects", "View Suspects"],
+      ["clues", "Investigate Clues"],
+      ["alibis", "Check Alibis"],
+      ["accuse", "Accuse a Suspect"],
+      ["report", "View Investigation Report"],
+      ["story", "Read the Whole Story"]
+    ];
+
+    let cluesFound = 0;
+    let solved = false;
+    let score = 0;
+    let currentScreen = "home";
+
+    const menu = document.getElementById("menu");
+    const screen = document.getElementById("screen");
+
+    function goTo(page) {
+      currentScreen = page;
+      drawMenu();
+      render();
+    }
+
+    function drawMenu() {
+      menu.innerHTML = options.map((item, index) => `
+        <button class="${currentScreen === item[0] ? "active" : ""}"
+                onclick="goTo('${item[0]}')">
+          <span class="number">0${index + 1}</span>${item[1]}
+        </button>
+      `).join("");
+    }
+
+    function render() {
+      if (currentScreen === "home") {
+        screen.innerHTML = `
+          <div class="welcome">
+            <div class="eyebrow">Confidential · Case 04-B</div>
+            <h2>A priceless blue diamond. A locked mansion. Four stories that do not quite fit.</h2>
+            <p>The Blue Diamond disappeared from the exhibition room during a security outage. Four people were inside. Follow the evidence, keep track of what you learn, and decide who took it.</p>
+            <button class="primary" onclick="goTo('suspects')">Meet the suspects</button>
+            <button onclick="goTo('clues')">Start investigating</button>
+            <div class="notice">Use the case menu to inspect suspects, reveal clues one at a time, check alibis, and make an accusation.</div>
+          </div>`;
+      }
+
+      if (currentScreen === "suspects") {
+        screen.innerHTML = `
+          <h2>The Suspects</h2>
+          <p class="subtitle">Review each person and their stated whereabouts.</p>
+          <div class="cards">
+            ${suspects.map(suspect => `
+              <article class="card">
+                <span class="role">${suspect.role}</span>
+                <h3>${suspect.name}${suspect.name === "Victor" ? ' <span style="color:var(--blue)">◷</span>' : ""}</h3>
+                <p><strong>Alibi:</strong> ${suspect.alibi}${suspect.name === "Victor" ? "<br>He wears a silver watch." : ""}</p>
+              </article>
+            `).join("")}
+          </div>`;
+      }
+
+      if (currentScreen === "clues") {
+        screen.innerHTML = `
+          <h2>Investigate Clues</h2>
+          <p class="subtitle">Search the mansion and interview witnesses. Each search reveals one new clue.</p>
+          <div class="eyebrow">Evidence recovered · ${cluesFound} / 5</div>
+          <div class="progress"><div class="progress-bar" style="width:${cluesFound * 20}%"></div></div>
+          ${clues.slice(0, cluesFound).map((clue, index) => `
+            <div class="clue">
+              <span class="clue-number">${String(index + 1).padStart(2, "0")}</span>
+              <span>${clue}</span>
+            </div>
+          `).join("")}
+          ${cluesFound === 0 ? '<div class="notice">No clues collected yet. Begin with the exhibition room.</div>' : ""}
+          <button class="primary" onclick="discoverClue()">
+            ${cluesFound < 5 ? "Search for next clue" : "All clues found"}
+          </button>`;
+      }
+
+      if (currentScreen === "alibis") {
+        screen.innerHTML = `
+          <h2>Check Alibis</h2>
+          <p class="subtitle">Compare each account with the evidence you have uncovered.</p>
+          ${suspects.map((suspect, index) => {
+            const contradicted = index === 2 && cluesFound >= 4;
+            return `
+              <div class="alibi">
+                <strong>${suspect.name} · ${suspect.role}</strong>
+                <span class="status ${contradicted ? "bad" : ""}">
+                  ${contradicted ? "Contradicted" : "Questionable"}
+                </span>
+                <p>Claims to be ${suspect.alibi}.</p>
+              </div>`;
+          }).join("")}
+          <div class="notice">
+            ${cluesFound >= 4
+              ? "Victor's account is contradicted by the evidence in your file."
+              : "No alibi is verified yet. Reveal more clues to assess the accounts."}
+          </div>`;
+      }
+
+      if (currentScreen === "accuse") {
+        screen.innerHTML = `
+          <h2>Make an Accusation</h2>
+          <p class="subtitle">Who do you believe took the Blue Diamond?</p>
+          <select id="suspectChoice">
+            <option value="">Choose a suspect…</option>
+            ${suspects.map((suspect, index) =>
+              `<option value="${index}">${suspect.name}</option>`
+            ).join("")}
+          </select>
+          <button class="primary" onclick="accuse()">Submit accusation</button>
+          <div class="notice">You can keep investigating after a wrong accusation.</div>`;
+      }
+
+      if (currentScreen === "story") {
+        screen.innerHTML = `
+          <h2>The Whole Story</h2>
+          <p class="subtitle">Prefer to read the mystery from beginning to end? The full case is below. Spoilers: this reveals the culprit and ending.</p>
+          <article class="story-text">
+            <h3>Chapter 1: The Mysterious Disappearance</h3>
+            <img class="story-image" src="https://images.openai.com/static-rsc-4/QcGMGkWEF0n217yn9ChS4oExp4FTDGEHYvzJpQa2FXWBOxl5K9psb3YNf5T8leVHy23lJRzkDoiHyj_yAcG9TUcly2e88ZVnG69gm8TuKPKrMkriPAYPCuPPCa6tdmpyuPaNyGeJtNvbkFmm-JMG4Quz_34YrszxszEi7z7aJAg?purpose=inline" alt="Detective mystery illustration" loading="lazy">
+            <p>It was a quiet Saturday evening at Blackwood Mansion, where a private exhibition was displaying the legendary Blue Diamond. At 8:20 PM, the mansion's security system went offline. Fifteen minutes later it came back online, and the diamond had vanished from its secured exhibition room. Four people were in the mansion. You were appointed lead detective to find the thief, uncover the truth, and recover the missing diamond.</p>
+
+            <h3>Chapter 2: The Four Suspects</h3>
+            <img class="story-image" src="https://images.openai.com/static-rsc-4/XNo0brbznnEF4ExZfPd2n6gDGFWDykJ6oPmwIJIU88Ul58mr0_8wLaql41OPLXZ9T5u26yumdaRcEVIbyYeB5JVhA2tM1htmA0C8Wln7O3G5z_dVJzrxTqY1r8LX8ekEBeaj46AThWVEMzQlepV2D4n3fCrnD91odjTsjEN_qsQ?purpose=inline" alt="Blackwood Mansion suspect portrait" loading="lazy">
+            <img class="story-image" src="https://images.openai.com/static-rsc-4/rrHRkQB06Oxv7SbpD9CKdrhZUmwNWjycEdbqOR9SMq-9Ivi9h1GLKKC5MYUgrWGInhKMpm1i594tOlcMququhgxieOGaYYz72WZYqKK4DIj_D9zGQLDl4Kk0KKqx820jkebZa5uHo5vq4TSpjDzQljOQh5ybTwdzS48dGgbwBsQ?purpose=inline" alt="Blackwood Mansion suspect portrait" loading="lazy">
+            <img class="story-image" src="https://images.openai.com/static-rsc-4/CTfCLjFWv4UrxpsZCHk47psppzVavL38pgwJDYebSWSYVc7zJ-Zhqf87bPtZB-S5PEPgm5qcW6U3bPjUi21IiCbuKJUK91mk5inxN4U1QPwB5aaeIGDBMo12Hzz8JaZN6JtJBycb21KYiphyExUDiTW1K0U-kMzdRvhAASdI1lA?purpose=inline" alt="Blackwood Mansion suspect illustration" loading="lazy">
+            <p>Adrian, the butler, said he was serving coffee in the kitchen. Clara, the artist, said she was painting in the east wing. Victor, a businessman wearing a distinctive silver watch, said he was making a phone call in the garden. Elena, a scientist, said she was working in the laboratory. Each had a possible opportunity, and each account needed checking.</p>
+
+            <h3>Chapter 3: The Investigation</h3>
+            <img class="story-image" src="https://images.openai.com/static-rsc-4/u5-appxHLvXsCje8O8nYuBAauRhQnBG_JTHGD-aMB_9azVN8oTUY7M8L-IXeq3CCCv3qEo7eNN7nFv6PBcFy5wKDnPuvS8ijH6m0GR2lJ7zP2b02VmCVyu1p6fqT2UJJpS7EbAGrEkV0BBcZMPvfePtftmGPYeWPz9GQNK-DhV8?purpose=inline" alt="Detective investigation illustration" loading="lazy">
+            <p>The security outage gave the thief a fifteen-minute window. Near the exhibition room, investigators found a muddy footprint matching a shoe found in the garden, suggesting someone had travelled between the garden and the room. A witness saw someone wearing a silver watch leaving the exhibition room at about 8:27 PM. Victor said he was on a phone call, but his phone records showed no outgoing call at 8:30 PM. Then another witness placed Victor near the exhibition room during the theft.</p>
+
+            <h3>Chapter 4: The Alibis</h3>
+            <p>There was no evidence contradicting Adrian's, Clara's, or Elena's stated whereabouts. Victor's account, however, was undermined by the missing phone call and the witnesses. The silver watch and the route between the garden and exhibition room tied the clues together.</p>
+
+            <h3>Chapter 5: The Final Accusation</h3>
+            <img class="story-image" src="https://images.openai.com/static-rsc-4/adY2diaZQFGHXdXL8IpD2yQZ5CbI_Mu3u_kReUtXFXhBXrGqmk-aKn8VxWAMGuBHUlY7-8NScrtRLcubvkqXlPj1zyWIohR1FJ7EjFhs3iUFWXEWQ5IM9iKnILzMusymjVjixfjSf5bOTuPSLSeC4XNKpSXYMrhNs3BkOjZoSPo?purpose=inline" alt="Sherlock style detective illustration" loading="lazy">
+            <p>You gathered the four suspects in the drawing room and reviewed the evidence: the security outage created an opportunity, the muddy footprint linked the garden to the exhibition room, a silver watch identified a person leaving the room, and Victor's phone records disproved his alibi. The final witness had also seen him near the scene.</p>
+            <p><strong>You named Victor as the thief.</strong> Faced with the contradictions in his story, Victor's carefully prepared alibi fell apart. The evidence exposed his involvement in stealing the Blue Diamond.</p>
+
+            <h3>Chapter 6: Case Closed</h3>
+            <img class="story-image" src="https://images.openai.com/static-rsc-4/1CKQZwJOP9e_2865Z3e9akNbwKTlD_7IfSi5K4RWRwb1mioY51Zq0KxQqqa8AhanrH0zmGNcWGSKy75c2V9x9KZhnITUcURSoTfN3VgcItHwU0YDAfnr_k5dtb_BdHUa0V1zerMiOkTzM94AFB5m6lhrrVa1JYShiVNEuSIdxb0?purpose=inline" alt="Blue diamond illustration" loading="lazy">
+            <p>Victor was identified as the thief, and the Blackwood Detective Bureau recorded the case as solved. Your detective rank depends on how many clues you uncovered: 90–100 points earns Master Detective; 70–89 Senior Investigator; 40–69 Junior Detective; and 0–39 Rookie.</p>
+            <p><em>Every mystery leaves behind a clue. Every lie creates a contradiction. A good detective does not simply guess the truth — a good detective proves it.</em></p>
+          </article>`;
+      }
+
+      if (currentScreen === "report") {
+        let rank = "Case Unsolved";
+
+        if (solved) {
+          if (score >= 90) rank = "Master Detective";
+          else if (score >= 70) rank = "Senior Investigator";
+          else if (score >= 40) rank = "Junior Detective";
+          else rank = "Rookie";
+        }
+
+        screen.innerHTML = `
+          <h2>Investigation Report</h2>
+          <p class="subtitle">Final status of the Blackwood Mansion case.</p>
+          <div class="report">
+            <div class="report-item"><span>Clues discovered</span><strong>${cluesFound} / 5</strong></div>
+            <div class="report-item"><span>Case status</span><strong>${solved ? "Solved" : "Unsolved"}</strong></div>
+            <div class="report-item"><span>Final score</span><strong>${score} / 100</strong></div>
+            <div class="report-item"><span>Detective rank</span><strong class="rank">${rank}</strong></div>
+          </div>
+          <div class="notice">
+            ${solved
+              ? "Victor was exposed as the thief. The Blue Diamond case is closed."
+              : "The culprit has not been correctly identified. Keep investigating and try again."}
+          </div>`;
+      }
+    }
+
+    function discoverClue() {
+      if (cluesFound < clues.length) {
+        cluesFound++;
+      }
+      render();
+    }
+
+    function accuse() {
+      const choice = document.getElementById("suspectChoice").value;
+
+      if (choice === "") {
+        alert("Please choose a suspect first.");
+        return;
+      }
+
+      if (Number(choice) === 2) {
+        solved = true;
+        score = cluesFound * 20;
+        currentScreen = "report";
+      } else {
+        alert(`${suspects[choice].name} is not the culprit. Keep investigating.`);
+      }
+
+      drawMenu();
+      render();
+    }
+
+    drawMenu();
+    render();
+  </script>
+</body>
+</html>
